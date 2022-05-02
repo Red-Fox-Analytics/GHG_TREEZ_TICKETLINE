@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: FIVETRAN_DATABASE
+    schema: TREEZ_FIVETRAN
+    tables:
+      - name: ticketline
+ 
