@@ -12,5 +12,5 @@
 		, t.total_mg_thc "Total Mg Thc", t."TYPE" "Type", t.unitofmeasure "Unitofmeasure", t.weight "Weight", t.zip "Zip", t.productname "Productname", t.ticketalphaid "Ticketalphaid"
 		, t."_FIVETRAN_BATCH" "Fivertran Batch", t."_FIVETRAN_INDEX" "Fivertran Index", t."_FIVETRAN_SYNCED" "Fivertran Synced",  concat(t."SIZE"||' ', t.package_size) "Size/Pack Size(Custom)"
 		, t.cost "Cost", t.discounts "Discounts", t.excisetaxamount  "Escisetaxamount", t.income_household_median "Income Household Median" 
-		, t.netsales "Netsales", t.qty "Qty", t."returns" "Returns", t.reward_balance "Reward Balance"
+		, t.netsales "Netsales", t.qty "Qty", t."RETURNS" "Returns", t.reward_balance "Reward Balance"
 	from {{source('FIVETRAN_DATABASE','ticketline')}} t--treez_fivetran.ticketline t 
