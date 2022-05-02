@@ -32,7 +32,7 @@
 )
 
 select td.* , td1."Cost" "Cost Ya", td1."Discounts" "Discounts Ya", td1."Escisetaxamount"  "Escisetaxamount Ya",td1."Income Household Median" "Income Household Median Ya" 
-		, td1."Netsales" "Netsales Ya", td1."Qty" "Qty Ya", td1."Returns" "Returns Ya",td1."Reward Balance" "Reward Balance Ya", td1."DATECLOSED" "DATECLOSED"
+		, td1."Netsales" "Netsales Ya", td1."Qty" "Qty Ya", td1."Returns" "Returns Ya",td1."Reward Balance" "Reward Balance Ya", td1."DATECLOSED" "DATECLOSED YA"
 from ticketline_agg_cmb td
 left join ticketline_agg_cmb td1 
 on  td."Customer Uuid" = td1."Customer Uuid"
