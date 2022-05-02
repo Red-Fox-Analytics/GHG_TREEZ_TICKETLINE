@@ -1,5 +1,5 @@
  with ticketline_data as (
-	select   t.Storeid "Storeid",t.customer_uuid "Customer Uuid",t.product_id "Product Id",  t.ticketlineid "Ticketlineid",t.dateclosed , t.customname "Customname",t.age as "Age", t.age_group as "Age Group", t.approver "Approver", t.cashier "Cashier", t.cbd_perc "Dbd Perc", t.channel "Channel" ,t.classification "Classification"
+	select   t.Storeid "Storeid",t.customer_uuid "Customer Uuid",t.product_id "Product Id",  t.ticketlineid "Ticketlineid",t.dateclosed "DATECLOSED", t.customname "Customname",t.age as "Age", t.age_group as "Age Group", t.approver "Approver", t.cashier "Cashier", t.cbd_perc "Dbd Perc", t.channel "Channel" ,t.classification "Classification"
 		, t.county_name "County Name", t.customer_city "Customer City", t.customer_country "Customer Country", t.customer_groups "Customer Groups"
 		, t.customer_signup_date "Customer Signup Date", t.customer_source "Customer Source", t.customer_state "Customer State", t.customer_type "Customer Type"
 		,   t.distributor "Distributor", t.gender "Gender"
@@ -17,7 +17,7 @@
 	from {{source('FIVETRAN_DATABASE','ticketline')}} t--treez_fivetran.ticketline t 
 ), ticketline_aggr as 
 (
-	select STOREID "Storeid",customer_uuid "Customer Uuid",product_id "Product Id", dateclosed 
+	select STOREID "Storeid",customer_uuid "Customer Uuid",product_id "Product Id", dateclosed "DATECLOSED"
 		   ,  sum(cost) "Cost", sum(discounts) "Discounts", sum(excisetaxamount)  "Escisetaxamount", sum(income_household_median) "Income Household Median" 
 		, sum(netsales) "Netsales", sum(qty) "Qty", sum("RETURNS") "Returns", sum(reward_balance) "Reward Balance"
 	from treez_fivetran.ticketline
@@ -32,14 +32,14 @@
 )
 
 select td.* , td1."Cost" "Cost Ya", td1."Discounts" "Discounts Ya", td1."Escisetaxamount"  "Escisetaxamount Ya",td1."Income Household Median" "Income Household Median Ya" 
-		, td1."Netsales" "Netsales Ya", td1."Qty" "Qty Ya", td1."Returns" "Returns Ya",td1."Reward Balance" "Reward Balance Ya", td1."DATECLOSED" "dateclosed"
+		, td1."Netsales" "Netsales Ya", td1."Qty" "Qty Ya", td1."Returns" "Returns Ya",td1."Reward Balance" "Reward Balance Ya", td1."DATECLOSED" "DATECLOSED"
 from ticketline_agg_cmb td
 left join ticketline_agg_cmb td1 
 on  td."Customer Uuid" = td1."Customer Uuid"
 	and td."Storeid" = td1."Storeid"
 	and td."Product Id" = td1."Product Id"
-	and date_part('day',td."DATECLOSED" ::date)=date_part('day',td1."DATECLOSED"::date) 
-	and date_part('month',td."DATECLOSED" ::date)=date_part('month',td1."DATECLOSED"::date) 
-    and date_part('year',td."DATECLOSED"::date)=date_part('year',td1."DATECLOSED"::date)+1
+	and date_part(DAY,td."DATECLOSED" ::date)=date_part(DAY,td1."DATECLOSED"::date) 
+	and date_part(MONTH,td."DATECLOSED" ::date)=date_part(MONTH,td1."DATECLOSED"::date) 
+    and date_part(YEAR,td."DATECLOSED"::date)=date_part(YEAR,td1."DATECLOSED"::date)+1
 
     
