@@ -5,4 +5,6 @@ sources:
     schema: TREEZ_FIVETRAN
     tables:
       - name: ticketline
+      - name: INVENTORY
+      - name: INVENTORY_ADJUSTMENT
  
