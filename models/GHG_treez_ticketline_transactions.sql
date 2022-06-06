@@ -7,7 +7,7 @@
 		, t.productsubtype "Productsubtype", t.producttype "Producttype", t.region "Region", t.retail_brand "Retail Brand", t."SIZE" "Size"
 		, t.sku "Sku", t.state_name "State Name", t.store_state "Store State", t.thc_perc "Thc Perc", t.thc_ratio "Thc Ratio"
 		, case when t.ticket_type='DELIVERY' then 'Delivery' else 'In-Store' end  "Ticket Type (group)"
-		, case when t.register in ('DELIVERY 01','DELIVERY 02','DELIVERY 03','DELIVERY POUCH') then 'Delivery  	(Pottery)' else 'In-Store (Pottery)' end  "Ticket Type (Pottery)"
+		, case when t.register in ('DELIVERY 01','DELIVERY 02','DELIVERY 03','DELIVERY POUCH') then 'Delivery (Pottery)' else 'In-Store (Pottery)' end  "Ticket Type (Pottery)"
 		, t.ticket_updated_date "Ticket Update Date", t.ticketid "Ticketid" , t.tier "Tier", t.total_mg_cbd "Total Mg Cbd" 
 		, t.total_mg_thc "Total Mg Thc", t."TYPE" "Type", t.unitofmeasure "Unitofmeasure", t.weight "Weight", t.zip "Zip", t.productname "Productname", t.ticketalphaid "Ticketalphaid"
 		, t."_FIVETRAN_BATCH" "Fivertran Batch", t."_FIVETRAN_INDEX" "Fivertran Index", t."_FIVETRAN_SYNCED" "Fivertran Synced",  concat(t."SIZE"||' ', t.package_size) "Size/Pack Size(Custom)"
