@@ -5,8 +5,10 @@ WITH ticketline AS
 		, t.customer_signup_date "Customer Signup Date", t.customer_source "Customer Source", t.customer_state "Customer State", t.customer_type "Customer Type"
 		,   t.distributor "Distributor", t.gender "Gender"
 		, t.harvest_date "Harvest Date", t.inventory_date "Inventory Date", t.invoiceid "Invoiceid", t.last_visit "Last Visit", t.lat "Lat", t.lng "Lng", t.package_size "Package Size"
-		,concat(t.productsubtype||' ',t."SIZE") "Product Subtype + Size", t.productattributes "Productattributes", t.productbrand "Productbrand"
-		, t.productsubtype "Productsubtype", t.producttype "Producttype", t.region "Region", t.retail_brand "Retail Brand", t."SIZE" "Size"
+		, concat(t.productsubtype||' ',t."SIZE") "Product Subtype + Size", t.productattributes "Productattributes"
+		, case when t.productbrand is null then 'Brand Not Coded' else t.productbrand end "Productbrand"
+		, t.productsubtype "Productsubtype", t.producttype "Producttype", t.region "Region"
+		, t.retail_brand "Retail Brand", t."SIZE" "Size"
 		, t.sku "Sku", t.state_name "State Name", t.store_state "Store State", t.thc_perc "Thc Perc", t.thc_ratio "Thc Ratio"
 		, case when t.ticket_type='DELIVERY' then 'Delivery' else 'In-Store' end  "Ticket Type (group)"
 		, case when t.register in ('DELIVERY 01','DELIVERY 02','DELIVERY 03','DELIVERY POUCH') then 'Delivery (Pottery)' else 'In-Store (Pottery)' end  "Ticket Type (Pottery)"
@@ -18,52 +20,6 @@ WITH ticketline AS
 	from treez_fivetran.ticketline t--{{source('FIVETRAN_DATABASE','ticketline')}} t-- t 
 ), maxdate_cte AS 
 (
-	SELECT max(cast(DATECLOSED AS date)) MAX_DATE FROM TICKETLINE  
-	
-), ticketline_timeperiods as
-(
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'04 Weeks' AS TIME_PERIOD, 4*7 AS DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) > dateadd(day, -4*7, (SELECT MAX_DATE FROM maxdate_cte)) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	--ORDER BY CAST(DATECLOSED AS date)
-	
-	UNION ALL 
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'12 Weeks' AS TIME_PERIOD , 12*7 AS DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) > dateadd(day, -12*7, (SELECT MAX_DATE FROM maxdate_cte)) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	--ORDER BY CAST(DATECLOSED AS date)
-	
-	UNION ALL 
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'24 Weeks' AS TIME_PERIOD , 24*7 AS  DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) > dateadd(day, -24*7, (SELECT MAX_DATE FROM maxdate_cte)) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	--ORDER BY CAST(DATECLOSED AS date)
-	
-	UNION ALL 
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'52 Weeks' AS TIME_PERIOD , 52*7 AS  DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) > dateadd(day, -52*7, (SELECT MAX_DATE FROM maxdate_cte)) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	--ORDER BY CAST(DATECLOSED AS date)
-	UNION ALL 
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'104 Weeks' AS TIME_PERIOD ,104*7 AS  DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) > dateadd(day, -104*7, (SELECT MAX_DATE FROM maxdate_cte)) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	
-	UNION ALL
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'MTD' AS TIME_PERIOD , DATE_PART(DAY, (SELECT MAX_DATE FROM maxdate_cte)) DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) >= CAST(concat(year(SELECT MAX_DATE FROM maxdate_cte),'-',MONTH((SELECT MAX_DATE FROM maxdate_cte)),'-01') AS date) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-	
-	UNION ALL
-	
-	SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE,'YTD' AS TIME_PERIOD ,DATE_PART(DOY, (SELECT MAX_DATE FROM maxdate_cte)) DAYS_IN_RANGE_RF
-	FROM TICKETLINE 
-	WHERE CAST(DATECLOSED AS date) >= CAST(concat(year(SELECT MAX_DATE FROM maxdate_cte),'-01-01') AS date) AND CAST(DATECLOSED AS date)<=(SELECT MAX_DATE FROM maxdate_cte) 
-
+	SELECT max(cast(DATECLOSED AS date)) MAX_DATE FROM TICKETLINE  	
 )
-SELECT *, DAYS_IN_RANGE_RF+364 AS DAYS_IN_RANGE_YA_RF FROM ticketline_timeperiods
+SELECT *, (SELECT MAX_DATE FROM maxdate_cte) MAX_DATE FROM ticketline
