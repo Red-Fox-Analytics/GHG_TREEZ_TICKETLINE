@@ -8,7 +8,7 @@ WITH ticketline AS
 		, concat(t.productsubtype||' ',t."SIZE") "Product Subtype + Size", t.productattributes "Productattributes"
 		, case when t.productbrand is null then 'Brand Not Coded' else t.productbrand end "Productbrand"
 		, t.productsubtype "Productsubtype", t.producttype "Producttype", t.region "Region"
-		, t.retail_brand "Retail Brand", t."SIZE" "Size"
+		, case when t.retail_brand is null then 'Brand Not Coded' else t.retail_brand end "Retail Brand", t."SIZE" "Size"
 		, t.sku "Sku", t.state_name "State Name", t.store_state "Store State", t.thc_perc "Thc Perc", t.thc_ratio "Thc Ratio"
 		, case when t.ticket_type='DELIVERY' then 'Delivery' else 'In-Store' end  "Ticket Type (group)"
 		, case when t.register in ('DELIVERY 01','DELIVERY 02','DELIVERY 03','DELIVERY POUCH') then 'Delivery (Pottery)' else 'In-Store (Pottery)' end  "Ticket Type (Pottery)"
