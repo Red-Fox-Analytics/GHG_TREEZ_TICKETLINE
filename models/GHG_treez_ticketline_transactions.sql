@@ -17,7 +17,7 @@ WITH ticketline AS
 		, t."_FIVETRAN_BATCH" "Fivertran Batch", t."_FIVETRAN_INDEX" "Fivertran Index", t."_FIVETRAN_SYNCED" "Fivertran Synced",  concat(t."SIZE"||' ', t.package_size) "Size/Pack Size(Custom)"
 		, t.cost "Cost", t.discounts "Discounts", t.excisetaxamount  "Escisetaxamount", t.income_household_median "Income Household Median" 
 		, t.netsales "Netsales", t.qty "Qty", t."RETURNS" "Returns", t.reward_balance "Reward Balance"
-	from treez_fivetran.ticketline t--{{source('FIVETRAN_DATABASE','ticketline')}} t-- t 
+	from {{source('FIVETRAN_DATABASE','ticketline')}} t--treez_fivetran.ticketline t-- t-- t 
 ), maxdate_cte AS 
 (
 	SELECT max(cast(DATECLOSED AS date)) MAX_DATE FROM TICKETLINE  	
